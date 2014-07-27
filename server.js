@@ -244,7 +244,7 @@ CordovaLoader = {
   },
 
 	settings: function(settings){
-		_.extend(_settings,settings);
+		_.extend(CordovaLoader._settings,settings);
 	},
 
   _settings:{
