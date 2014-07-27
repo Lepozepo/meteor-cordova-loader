@@ -4,6 +4,7 @@ var fs = Npm.require('fs'),
       UglifyJS = Npm.require('uglify-js'),
       watch = Npm.require('watch'),
       mkdirp = Npm.require("mkdirp"),
+      glob = Npm.require("glob"),
       appPath = process.env.PWD,
 
       // Data Structure
@@ -12,6 +13,11 @@ var fs = Npm.require('fs'),
         plugin: {}
       },
       compiledFiles = {};
+
+	glob("cordova/ios.js",{},function(err,files){
+		console.log(err);
+		console.log(files);
+	});
 
 CordovaLoader = {
 
@@ -117,7 +123,7 @@ CordovaLoader = {
   },
 
   /*
-    Load the previous version of the packed cordova files
+    Find and load the previous version of the packed cordova files
   */
   loadPackedFiles: function (callback) {
     CordovaLoader._settings.platforms.forEach(function (platform) {
@@ -152,24 +158,6 @@ CordovaLoader = {
       pack = pack.concat(cordovaFiles.plugin[platform]);
 
       compiledFiles[platform] = UglifyJS.minify(pack, {}).code;
-
-/*
-      fs.mkdir(appPath + "/private",function(e){
-        if(!e || (e && e.code === 'EEXIST')){
-            
-        } else {
-            console.log(e);
-        }
-      });
-
-      fs.mkdir(appPath + '/private/cordova',function(e){
-        if(!e || (e && e.code === 'EEXIST')){
-            
-        } else {
-            console.log(e);
-        }
-      });
-*/
 
 			var write_path = appPath + '/private/cordova/';
 			mkdirp(write_path,function(error){
