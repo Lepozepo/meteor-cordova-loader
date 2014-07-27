@@ -39,8 +39,6 @@ cordova create .project_name
 #### Step 2: Modify config.xml
 Open .project_name/config.xml and adjust settings to what you want them to be. This is where you change the apps name, description, etc. You absolutely must have this:
 ````
-cordova create .project_name
-````
 	<content src="" />
 	<access origin="*" />
 ````
