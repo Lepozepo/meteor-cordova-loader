@@ -6,6 +6,8 @@ var fs = Npm.require('fs'),
       appPath = process.env.PWD,
 			mode = process.env.NODE_ENV
 
+			console.log process.env.NODE_ENV
+
       // Data Structure
       cordovaFiles = {
         core: {},
