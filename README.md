@@ -114,3 +114,6 @@ CordovaLoader.init()
 ================
 
 If you want more features than this provides, file an issue. Feature requests/contributions are welcome.
+
+#### Contributors
+[Marcelo Reyna](https://github.com/Lepozepo)
