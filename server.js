@@ -125,10 +125,10 @@ CordovaLoader = {
             concatFile = '';
 
       fs.readFile(appPath + '/private/cordova/' + platform + '.js', 'utf8', function (err, data) {
-        if (err)
+        if (err) {
 					var current_path = appPath + '/private/cordova/' + platform + '.js';
           Logger.log('error', 'error while reading file '+current_path);
-        else {
+        } else {
           Logger.log('cordova', 'Loaded compiled file into memory', platform);
           compiledFiles[platform] = data;
         }
