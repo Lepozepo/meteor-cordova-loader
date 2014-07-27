@@ -3,7 +3,7 @@ var fs = Npm.require('fs'),
       async = Npm.require('async'),
       UglifyJS = Npm.require('uglify-js'),
       watch = Npm.require('watch'),
-      appPath = path.resolve('../../../../../'),
+      appPath = process.env.PWD,
 
       // Data Structure
       cordovaFiles = {
@@ -11,8 +11,6 @@ var fs = Npm.require('fs'),
         plugin: {}
       },
       compiledFiles = {};
-
-console.log(path.resolve(process.env.PWD,"../"));
 
 CordovaLoader = {
 
