@@ -50,6 +50,7 @@ CordovaLoader = {
           _this.packFiles
 /*           _this.serve */
         ]);
+			}
 /*
       } else if (CordovaLoader.settings.mode == "production") {
         Logger.log('cordova', 'cordova-loader started in production CordovaLoader.settings.mode.');
