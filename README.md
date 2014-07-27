@@ -74,6 +74,7 @@ Around line 210, modify self.wwwFolderName to point to your server and self.star
 CordovaLoader.settings = {
 		cordovaProjectPath: ".project_name",
 		platforms: ["ios"],
+		compiledFilesPath: "/client", //MUST BE A CLIENT SIDE FOLDER OR ELSE IT WON'T WORK, defaults to "/client"
 		logging: true
 }
 
