@@ -47,9 +47,10 @@ CordovaLoader = {
         async.series([
           _this.addCoreFiles,
           _this.addPluginFiles,
-          _this.packFiles,
-          _this.serve
+          _this.packFiles
+/*           _this.serve */
         ]);
+/*
       } else if (CordovaLoader.settings.mode == "production") {
         Logger.log('cordova', 'cordova-loader started in production CordovaLoader.settings.mode.');
 
@@ -58,6 +59,7 @@ CordovaLoader = {
           _this.serve,
         ]);
       }
+*/
     }
   },
 
@@ -130,7 +132,7 @@ CordovaLoader = {
 
       compiledFiles[platform] = UglifyJS.minify(pack, {}).code;
 
-      fs.mkdir(appPath + '/private',function(e){
+      fs.mkdir(appPath + CordovaLoader.settings.compiledFilesPath,function(e){
         if(!e || (e && e.code === 'EEXIST')){
             
         } else {
@@ -138,7 +140,7 @@ CordovaLoader = {
         }
       });
 
-      fs.mkdir(appPath + '/private/cordova',function(e){
+      fs.mkdir(appPath + CordovaLoader.settings.compiledFilesPath + '/cordova',function(e){
         if(!e || (e && e.code === 'EEXIST')){
             
         } else {
@@ -146,11 +148,11 @@ CordovaLoader = {
         }
       });
 
-      fs.writeFile(appPath + '/private/cordova/' + platform + '.js', compiledFiles[platform], function(err) {
+      fs.writeFile(appPath + CordovaLoader.settings.compiledFilesPath + '/cordova/' + platform + '.js', compiledFiles[platform], function(err) {
           if(err) {
               console.log(err);
           } else {
-              Logger.log('cordova', 'Saved packed Cordova file for production use.', '/private/cordova/' + platform + '.js');
+              Logger.log('cordova', 'Saved packed Cordova file for production use.', CordovaLoader.settings.compiledFilesPath + '/cordova/' + platform + '.js');
           }
       }); 
     });
@@ -230,7 +232,7 @@ CordovaLoader = {
       var pack = [],
             concatFile = '';
 
-      fs.readFile(appPath + '/private/cordova/' + platform + '.js', 'utf8', function (err, data) {
+      fs.readFile(appPath + CordovaLoader.settings.compiledFilesPath + '/cordova/' + platform + '.js', 'utf8', function (err, data) {
         if (err)
           Logger.log('error', 'error while reading file '+pluginJsFilePath);
         else {
@@ -246,6 +248,7 @@ CordovaLoader = {
   	cordovaProjectPath:null,
   	platforms:[],
   	logging:false,
+  	compiledFilesPath:"/client",
   	mode:process.env.NODE_ENV
 	}
 }
