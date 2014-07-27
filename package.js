@@ -5,7 +5,8 @@ Package.describe({
 Npm.depends({
   'async': '0.9.0',
   'uglify-js': '2.4.14',
-  'watch': '0.10.0'
+  'watch': '0.10.0',
+  "mkdirp": "0.5.0"
 });
 
 Package.on_use(function (api) {
