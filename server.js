@@ -100,7 +100,7 @@ CordovaLoader = {
         platform = "windows";
       }
 
-      if (_.indexOf(platforms, platform) == -1) {
+      if (_.indexOf(CordovaLoader.settings.platforms, platform) == -1) {
         response = "// Browser not supported";
       } else {
         response = compiledFiles[platform];
@@ -119,7 +119,7 @@ CordovaLoader = {
     Load the previous version of the packed cordova files
   */
   loadPackedFiles: function (callback) {
-    platforms.forEach(function (platform) {
+    CordovaLoader.settings.platforms.forEach(function (platform) {
       var pack = [],
             concatFile = '';
 
