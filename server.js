@@ -3,6 +3,7 @@ var fs = Npm.require('fs'),
       async = Npm.require('async'),
       UglifyJS = Npm.require('uglify-js'),
       watch = Npm.require('watch'),
+      mkdirp = Npm.require("mkdirp"),
       appPath = process.env.PWD,
 
       // Data Structure
@@ -125,7 +126,8 @@ CordovaLoader = {
 
       fs.readFile(appPath + '/private/cordova/' + platform + '.js', 'utf8', function (err, data) {
         if (err)
-          Logger.log('error', 'error while reading file '+pluginJsFilePath);
+					var current_path = appPath + '/private/cordova/' + platform + '.js';
+          Logger.log('error', 'error while reading file '+current_path);
         else {
           Logger.log('cordova', 'Loaded compiled file into memory', platform);
           compiledFiles[platform] = data;
@@ -151,6 +153,7 @@ CordovaLoader = {
 
       compiledFiles[platform] = UglifyJS.minify(pack, {}).code;
 
+/*
       fs.mkdir(appPath + "/private",function(e){
         if(!e || (e && e.code === 'EEXIST')){
             
@@ -166,14 +169,22 @@ CordovaLoader = {
             console.log(e);
         }
       });
+*/
 
-      fs.writeFile(appPath + '/private/cordova/' + platform + '.js', compiledFiles[platform], function(err) {
-          if(err) {
-              console.log(err);
-          } else {
-              Logger.log('cordova', 'Saved packed Cordova file for production use.', '/private/cordova/' + platform + '.js');
-          }
-      }); 
+			var write_path = appPath + '/private/cordova/' + platform + '.js';
+			mkdirp(write_path,function(error){
+				if(!error){
+		      fs.writeFile(write_path, compiledFiles[platform], function(err) {
+		          if(err) {
+		              console.log(err);
+		          } else {
+		              Logger.log('cordova', 'Saved packed Cordova file for production use.', '/private/cordova/' + platform + '.js');
+		          }
+		      });
+				} else {
+					console.log(error);
+				}
+			});
     });
 
     callback(null, 'done');
