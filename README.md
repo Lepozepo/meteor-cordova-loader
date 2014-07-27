@@ -71,21 +71,29 @@ Around line 210, modify self.wwwFolderName to point to your server and self.star
 
 #### Step 5: Set up meteor and initialize the loader. SERVER SIDE
 ````
-CordovaLoader.settings = {
+CordovaLoader.settings({
 		cordovaProjectPath: ".project_name",
 		platforms: ["ios"],
-		compiledFilesPath: "/client", //MUST BE A CLIENT SIDE FOLDER OR ELSE IT WON'T WORK, defaults to "/client"
 		logging: true
-}
+})
 
 CordovaLoader.init()
 ````
-*Note: cordovaProjectPath can be relative or absolute. A relative path starts without a slash (ex: "folder/inside/meteor"), an absolute path starts with a slash (ex: "/folder/outside/meteor")
+*Notes:
+cordovaProjectPath can be relative or absolute. A relative path starts without a slash (ex: "folder/inside/meteor" or "../../outside"), an absolute path starts with a slash (ex: "/folder/outside/meteor")
 
+Compiled files are saved to the /private directory and served via this package to make sure the correct cordova.js file is served for the correct platform
 
+The compiler will only run once due to live reload loop. If you want to rerun the compiler after adding a plugin just delete any of the public/cordova/ files.
 
-
-*Note: the compiler will only run once due to live reload loop. If you want to rerun the compiler after adding a plugin just delete any of the public/cordova/ files.*
+#### Step 6: Add packages to cordova
+Add packages to cordova via the cordova command in the cordova project you made
+````
+cd .project_name
+cordova plugin add org.apache.cordova.device
+cordova build
+````
+Build cordova after any changes you make (cordova build).
 
 ================
 
