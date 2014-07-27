@@ -3,7 +3,7 @@
     "description": "Cordova asset compiler and loader",
     "homepage": "https://github.com/andrewreedy/meteor-cordova-loader",
     "author": "Andrew Reedy",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "git": "https://github.com/andrewreedy/meteor-cordova-loader.git",
     "packages": {
       "log": "0.0.2"
