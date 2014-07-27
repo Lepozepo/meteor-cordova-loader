@@ -246,7 +246,7 @@ CordovaLoader = {
   	cordovaProjectPath:null,
   	platforms:[],
   	logging:false,
-  	mode:"development"
+  	mode:process.env.NODE_ENV
 	}
 }
 
