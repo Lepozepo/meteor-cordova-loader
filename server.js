@@ -242,11 +242,12 @@ CordovaLoader = {
 
     callback(null, 'done');
   },
-  settings:
+  settings:{
   	CordovaLoader.settings.cordovaProjectPath:null,
   	CordovaLoader.settings.platforms:[],
   	CordovaLoader.settings.logging:false,
   	CordovaLoader.settings.mode:"development"
+	}
 }
 
 /* CordovaLoader.init(); */
