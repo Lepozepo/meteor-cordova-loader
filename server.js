@@ -21,27 +21,27 @@ CordovaLoader = {
     _this = this;
 
 		// handle relative Cordova Project Paths
-		if (appPath && CordovaLoader.settings.cordovaProjectPath)
-			CordovaLoader.settings.cordovaProjectPath = path.resolve(appPath, CordovaLoader.settings.cordovaProjectPath);
+		if (appPath && CordovaLoader._settings.cordovaProjectPath)
+			CordovaLoader._settings.cordovaProjectPath = path.resolve(appPath, CordovaLoader._settings.cordovaProjectPath);
 
     Logger.addLogType('cordova', 'yellow');
 
-    if (!CordovaLoader.settings.logging) {
+    if (!CordovaLoader._settings.logging) {
       Logger.disableLog('cordova');
     }
 
     Logger.log('cordova', 'Starting Cordova Asset Compiler...');
-    Logger.log('cordova', 'Enabled CordovaLoader.settings.platforms: ', CordovaLoader.settings.platforms.join(', '));
+    Logger.log('cordova', 'Enabled CordovaLoader._settings.platforms: ', CordovaLoader._settings.platforms.join(', '));
     
-    if (CordovaLoader.settings.platforms.length) {
+    if (CordovaLoader._settings.platforms.length) {
 
-      CordovaLoader.settings.platforms.forEach(function (platform) {
+      CordovaLoader._settings.platforms.forEach(function (platform) {
         cordovaFiles.plugin[platform] = [];
         cordovaFiles.core[platform] = [];
       });
 
-      if (process.env.NODE_ENV === "development" && CordovaLoader.settings.cordovaProjectPath) {
-        Logger.log('cordova', 'Cordova Project Path:', CordovaLoader.settings.cordovaProjectPath);
+      if (process.env.NODE_ENV === "development" && CordovaLoader._settings.cordovaProjectPath) {
+        Logger.log('cordova', 'Cordova Project Path:', CordovaLoader._settings.cordovaProjectPath);
         Logger.log('cordova', 'cordova-loader started in development mode');
 
         async.series([
@@ -65,11 +65,11 @@ CordovaLoader = {
     Watch the cordova plugins directory for changes and trigger a recompile
   */
   watch: function () {
-    watch.watchTree(CordovaLoader.settings.cordovaProjectPath + '/plugins', {ignoreDotFiles: true}, function (f, curr, prev) {
+    watch.watchTree(CordovaLoader._settings.cordovaProjectPath + '/plugins', {ignoreDotFiles: true}, function (f, curr, prev) {
       if (typeof f == "object" && prev === null && curr === null) {
         // Finished walking the tree
       } else {
-        if (compiledFiles[CordovaLoader.settings.platforms[0]]) {
+        if (compiledFiles[CordovaLoader._settings.platforms[0]]) {
           console.log("recompile");
         }             
       }
@@ -100,7 +100,7 @@ CordovaLoader = {
         platform = "windows";
       }
 
-      if (_.indexOf(CordovaLoader.settings.platforms, platform) == -1) {
+      if (_.indexOf(CordovaLoader._settings.platforms, platform) == -1) {
         response = "// Browser not supported";
       } else {
         response = compiledFiles[platform];
@@ -119,7 +119,7 @@ CordovaLoader = {
     Load the previous version of the packed cordova files
   */
   loadPackedFiles: function (callback) {
-    CordovaLoader.settings.platforms.forEach(function (platform) {
+    CordovaLoader._settings.platforms.forEach(function (platform) {
       var pack = [],
             concatFile = '';
 
@@ -142,7 +142,7 @@ CordovaLoader = {
   packFiles: function (callback) {
     // console.log(cordovaFiles);
 
-    CordovaLoader.settings.platforms.forEach(function (platform) {
+    CordovaLoader._settings.platforms.forEach(function (platform) {
       var pack = [],
             concatFile = '';
 
@@ -184,7 +184,7 @@ CordovaLoader = {
     Add the platform's core cordova files to the list to be packed
   */
   addCoreFiles: function (callback) {
-    CordovaLoader.settings.platforms.forEach(function (platform) {
+    CordovaLoader._settings.platforms.forEach(function (platform) {
 
       var path = "";
       if (platform == "ios") {
@@ -193,11 +193,11 @@ CordovaLoader = {
         path = "/assets/www/"
       }
 
-      location = CordovaLoader.settings.cordovaProjectPath + '/platforms/' + platform + path + 'cordova.js';
+      location = CordovaLoader._settings.cordovaProjectPath + '/platforms/' + platform + path + 'cordova.js';
       cordovaFiles.core[platform].push(location);
       Logger.log('cordova', 'Adding ' + platform + ' Cordova file', location);
 
-      location = CordovaLoader.settings.cordovaProjectPath + '/platforms/' + platform + path + 'cordova_plugins.js';
+      location = CordovaLoader._settings.cordovaProjectPath + '/platforms/' + platform + path + 'cordova_plugins.js';
       cordovaFiles.core[platform].push(location);
       Logger.log('cordova', 'Adding ' + platform + ' Cordova file', location);
     });
@@ -210,7 +210,7 @@ CordovaLoader = {
   */
   addPluginFiles: function (callback) {
 
-    async.each(CordovaLoader.settings.platforms, function (platform, callback) {
+    async.each(CordovaLoader._settings.platforms, function (platform, callback) {
 
       var path = "";
       if (platform == "ios") {
@@ -219,7 +219,7 @@ CordovaLoader = {
         path = "/assets/www/"
       }
 
-      var pluginJsFilePath = CordovaLoader.settings.cordovaProjectPath + '/platforms/' + platform + path + 'cordova_plugins.js';
+      var pluginJsFilePath = CordovaLoader._settings.cordovaProjectPath + '/platforms/' + platform + path + 'cordova_plugins.js';
       fs.readFile(pluginJsFilePath, 'utf8', function (err, data) {
         if (err)
           Logger.log('error', 'error while reading file '+pluginJsFilePath);
@@ -227,7 +227,7 @@ CordovaLoader = {
         plugins = JSON.parse(plugins);
 
         plugins.forEach(function (plugin) {
-          location = CordovaLoader.settings.cordovaProjectPath + '/platforms/' + platform + path + plugin.file;
+          location = CordovaLoader._settings.cordovaProjectPath + '/platforms/' + platform + path + plugin.file;
 
           cordovaFiles.plugin[platform].push(location);
           Logger.log('cordova', 'Adding ' + platform + ' plugin file', location);
@@ -243,7 +243,11 @@ CordovaLoader = {
 
   },
 
-  settings:{
+	settings: function(settings){
+		_.extend(_settings,settings);
+	},
+
+  _settings:{
   	cordovaProjectPath:null,
   	platforms:[],
   	logging:false
