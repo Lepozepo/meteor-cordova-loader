@@ -28,31 +28,59 @@ mrt add cordova-loader
 
 ================
 
-##### Meteor settings file (development)
+##### GETTING STARTED (iOS)
+#### Step 1: Create a Cordova project in your meteor project (so where you run mrt you run this)
 ````
-{
-  "cordova":{
-    "path": "/directory-example/cordova-project",
-    "platforms": ["ios"],
-    "logging": true
-  }
-}
+cordova create .project_name
 ````
-##### Meteor settings file (production)
+*Note: Start the name of your project with a dot (".") so that meteor ignores it
+
+
+#### Step 2: Modify config.xml
+Open .project_name/config.xml and adjust settings to what you want them to be. This is where you change the apps name, description, etc. You absolutely must have this:
 ````
-{
-  "cordova":{
-    "mode": "production",
-    "platforms": ["ios"],
-    "logging": true
-  }
-}
+cordova create .project_name
+````
+	<content src="" />
+	<access origin="*" />
 ````
 
-###### Options
-* path: Path to your Cordova project directory.
-* platforms: Array of platforms you are using.
-* logging: This is optional. Just trying to give some transpency into the package.
+#### Step 3: Add platforms and build
+````
+cd .project_name
+cordova platform add ios
+cordova build
+````
+
+
+#### Step 4: Point the app to your server
+Go to /.project_name/platforms/ios/Project.xcodeproject and open it in xcode
+In xcode, open: CordovaLib.xcodeproj/Classes/Cleaver/CDVViewController.m
+
+Around line 210, modify self.wwwFolderName to point to your server and self.startPage to an empty string like this:
+````
+	//For local testing on a mac
+    self.wwwFolderName = @"http://mycomputername.local:3000";
+    self.startPage = delegate.startPage;
+    if (self.startPage == nil) {
+        self.startPage = @"";
+    }
+````
+
+#### Step 5: Set up meteor and initialize the loader. SERVER SIDE
+````
+CordovaLoader.settings = {
+		cordovaProjectPath: ".project_name",
+		platforms: ["ios"],
+		logging: true
+}
+
+CordovaLoader.init()
+````
+*Note: cordovaProjectPath can be relative or absolute. A relative path starts without a slash (ex: "folder/inside/meteor"), an absolute path starts with a slash (ex: "/folder/outside/meteor")
+
+
+
 
 *Note: the compiler will only run once due to live reload loop. If you want to rerun the compiler after adding a plugin just delete any of the public/cordova/ files.*
 
@@ -80,12 +108,6 @@ mrt add cordova-loader
 #### Example Apps
 * [Meteor Cordova Todo](https://github.com/andrewreedy/meteor-cordova-todo) - Just started working on this. This will eventually be a working app as an example.
 
-## Final Notes
-
-##### Running your app with settings
-````
-mrt --settings settings.json
-````
 ================
 
 If you want more features than this provides, file an issue. Feature requests/contributions are welcome.
