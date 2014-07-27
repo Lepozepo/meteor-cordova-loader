@@ -12,10 +12,6 @@ var fs = Npm.require('fs'),
       },
       compiledFiles = {};
 
-// handle relative Cordova Project Paths
-if (appPath && CordovaLoader.settings.cordovaProjectPath)
-    CordovaLoader.settings.cordovaProjectPath = path.resolve(appPath, CordovaLoader.settings.cordovaProjectPath);
-
 CordovaLoader = {
 
   /*
@@ -23,6 +19,10 @@ CordovaLoader = {
   */
   init: function () {
     _this = this;
+
+		// handle relative Cordova Project Paths
+		if (appPath && CordovaLoader.settings.cordovaProjectPath)
+			CordovaLoader.settings.cordovaProjectPath = path.resolve(appPath, CordovaLoader.settings.cordovaProjectPath);
 
     Logger.addLogType('cordova', 'yellow');
 
@@ -243,10 +243,10 @@ CordovaLoader = {
     callback(null, 'done');
   },
   settings:{
-  	CordovaLoader.settings.cordovaProjectPath:null,
-  	CordovaLoader.settings.platforms:[],
-  	CordovaLoader.settings.logging:false,
-  	CordovaLoader.settings.mode:"development"
+  	cordovaProjectPath:null,
+  	platforms:[],
+  	logging:false,
+  	mode:"development"
 	}
 }
 
