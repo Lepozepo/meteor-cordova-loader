@@ -14,11 +14,6 @@ var fs = Npm.require('fs'),
       },
       compiledFiles = {};
 
-	glob("cordova/ios.js",{},function(err,files){
-		console.log(err);
-		console.log(files);
-	});
-
 CordovaLoader = {
 
   /*
@@ -130,15 +125,26 @@ CordovaLoader = {
       var pack = [],
             concatFile = '';
 
-      fs.readFile(appPath + '/private/cordova/' + platform + '.js', 'utf8', function (err, data) {
-        if (err) {
-					var current_path = appPath + '/private/cordova/' + platform + '.js';
-          Logger.log('error', 'error while reading file '+current_path);
-        } else {
-          Logger.log('cordova', 'Loaded compiled file into memory', platform);
-          compiledFiles[platform] = data;
-        }
-      });      
+			glob(appPath+"/**/cordova/"+platform+".js",{},function(glob_err,files){
+				if(!glob_err){
+					if(files && files.length !== 0){
+						fs.readFile(files[0], 'utf8', function (err, data) {
+							if (err) {
+								Logger.log('error', 'error while reading file '+files[0]);
+							} else {
+								Logger.log('cordova', 'Loaded compiled file into memory', platform);
+								compiledFiles[platform] = data;
+							}
+						});
+					} else {
+						console.log("CordovaLoader Error: Could not find files for "+platform);
+					}
+				} else {
+					console.log(glob_err);
+				}
+			});
+
+
     });
 
     callback(null, 'done');
