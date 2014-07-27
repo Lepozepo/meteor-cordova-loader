@@ -12,7 +12,7 @@ var fs = Npm.require('fs'),
       },
       compiledFiles = {};
 
-console.log(path.normalize("."));
+console.log(path.resolve(process.env.PWD,"../"));
 
 CordovaLoader = {
 
