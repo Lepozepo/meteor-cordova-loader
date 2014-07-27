@@ -12,6 +12,8 @@ var fs = Npm.require('fs'),
       },
       compiledFiles = {};
 
+console.log(path.normalize("."));
+
 CordovaLoader = {
 
   /*
@@ -250,4 +252,3 @@ CordovaLoader = {
 	}
 }
 
-/* CordovaLoader.init(); */
