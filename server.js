@@ -4,6 +4,7 @@ var fs = Npm.require('fs'),
       UglifyJS = Npm.require('uglify-js'),
       watch = Npm.require('watch'),
       appPath = process.env.PWD,
+			mode = process.env.NODE_ENV
 
       // Data Structure
       cordovaFiles = {
@@ -182,7 +183,7 @@ CordovaLoader = {
   	platforms:[],
   	logging:false,
   	compiledFilesPath:"/client",
-  	mode:process.env.NODE_ENV
+  	mode:mode
 	}
 }
 
