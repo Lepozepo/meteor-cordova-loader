@@ -171,10 +171,10 @@ CordovaLoader = {
       });
 */
 
-			var write_path = appPath + '/private/cordova/' + platform + '.js';
+			var write_path = appPath + '/private/cordova/';
 			mkdirp(write_path,function(error){
 				if(!error){
-		      fs.writeFile(write_path, compiledFiles[platform], function(err) {
+		      fs.writeFile(write_path + platform + '.js', compiledFiles[platform], function(err) {
 		          if(err) {
 		              console.log(err);
 		          } else {
