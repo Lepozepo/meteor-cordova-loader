@@ -4,9 +4,6 @@ var fs = Npm.require('fs'),
       UglifyJS = Npm.require('uglify-js'),
       watch = Npm.require('watch'),
       appPath = process.env.PWD,
-			mode = process.env.NODE_ENV
-
-			console.log(process.env.NODE_ENV)
 
       // Data Structure
       cordovaFiles = {
@@ -43,9 +40,9 @@ CordovaLoader = {
         cordovaFiles.core[platform] = [];
       });
 
-      if (CordovaLoader.settings.mode == "development" && CordovaLoader.settings.cordovaProjectPath) {
+      if (process.env.NODE_ENV == "development" && CordovaLoader.settings.cordovaProjectPath) {
         Logger.log('cordova', 'Cordova Project Path:', CordovaLoader.settings.cordovaProjectPath);
-        Logger.log('cordova', 'cordova-loader started in development CordovaLoader.settings.mode.');
+        Logger.log('cordova', 'cordova-loader started in development mode');
 
         async.series([
           _this.addCoreFiles,
@@ -184,8 +181,7 @@ CordovaLoader = {
   	cordovaProjectPath:null,
   	platforms:[],
   	logging:false,
-  	compiledFilesPath:"/client",
-  	mode:mode
+  	compiledFilesPath:"/client"
 	}
 }
 
