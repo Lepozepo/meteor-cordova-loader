@@ -40,15 +40,23 @@ CordovaLoader = {
         cordovaFiles.core[platform] = [];
       });
 
-      if (process.env.NODE_ENV == "development" && CordovaLoader.settings.cordovaProjectPath) {
+      if (process.env.NODE_ENV === "development" && CordovaLoader.settings.cordovaProjectPath) {
         Logger.log('cordova', 'Cordova Project Path:', CordovaLoader.settings.cordovaProjectPath);
         Logger.log('cordova', 'cordova-loader started in development mode');
 
         async.series([
           _this.addCoreFiles,
           _this.addPluginFiles,
-          _this.packFiles
+          _this.packFiles,
+          _this.serve
         ]);
+			} else {
+				Logger.log('cordova', 'cordova-loader started in production mode.');
+
+				async.series([
+					_this.loadPackedFiles,
+					_this.serve
+				]);
 			}
     }
   },
@@ -71,6 +79,64 @@ CordovaLoader = {
   },
 
   /*
+    Serve the compiled files on /cordova.js
+  */
+  serve: function () {
+    WebApp.connectHandlers.use(function(req, res, next) {
+      var platform, response;
+
+      if (req.url.split('/')[1] !== "cordova.js" || req.method !== "GET") {
+        next();
+        return;
+      }
+
+      if (/iPhone|iPad|iPod/i.test(req.headers["user-agent"])) {
+        platform = "ios";
+      } else if (/Android/i.test(req.headers["user-agent"])){
+        platform = "android";
+      } else if (/BlackBerry/i.test(req.headers["user-agent"])){
+        platform = "blackberry";
+      } else if (/IEMobile/i.test(req.headers["user-agent"])){
+        platform = "windows";
+      }
+
+      if (_.indexOf(platforms, platform) == -1) {
+        response = "// Browser not supported";
+      } else {
+        response = compiledFiles[platform];
+        Logger.log('cordova', 'Serving the cordova.js file to platform', platform);
+      }
+
+      res.statusCode = 200;
+      res.setHeader("Content-Length", Buffer.byteLength(response, "utf8"));
+      res.setHeader("Content-Type", "text/javascript");
+      res.write(response);
+      res.end();
+    });
+  },
+
+  /*
+    Load the previous version of the packed cordova files
+  */
+  loadPackedFiles: function (callback) {
+    platforms.forEach(function (platform) {
+      var pack = [],
+            concatFile = '';
+
+      fs.readFile(appPath + '/private/cordova/' + platform + '.js', 'utf8', function (err, data) {
+        if (err)
+          Logger.log('error', 'error while reading file '+pluginJsFilePath);
+        else {
+          Logger.log('cordova', 'Loaded compiled file into memory', platform);
+          compiledFiles[platform] = data;
+        }
+      });      
+    });
+
+    callback(null, 'done');
+  },
+
+  /*
     Concat and minify the platform specific bundles
   */
   packFiles: function (callback) {
@@ -85,7 +151,7 @@ CordovaLoader = {
 
       compiledFiles[platform] = UglifyJS.minify(pack, {}).code;
 
-      fs.mkdir(appPath + CordovaLoader.settings.compiledFilesPath,function(e){
+      fs.mkdir(appPath + "/private",function(e){
         if(!e || (e && e.code === 'EEXIST')){
             
         } else {
@@ -93,7 +159,7 @@ CordovaLoader = {
         }
       });
 
-      fs.mkdir(appPath + CordovaLoader.settings.compiledFilesPath + '/cordova',function(e){
+      fs.mkdir(appPath + '/private/cordova',function(e){
         if(!e || (e && e.code === 'EEXIST')){
             
         } else {
@@ -101,11 +167,11 @@ CordovaLoader = {
         }
       });
 
-      fs.writeFile(appPath + CordovaLoader.settings.compiledFilesPath + '/cordova/' + platform + '.js', compiledFiles[platform], function(err) {
+      fs.writeFile(appPath + '/private/cordova/' + platform + '.js', compiledFiles[platform], function(err) {
           if(err) {
               console.log(err);
           } else {
-              Logger.log('cordova', 'Saved packed Cordova file for production use.', CordovaLoader.settings.compiledFilesPath + '/cordova/' + platform + '.js');
+              Logger.log('cordova', 'Saved packed Cordova file for production use.', '/private/cordova/' + platform + '.js');
           }
       }); 
     });
@@ -180,8 +246,7 @@ CordovaLoader = {
   settings:{
   	cordovaProjectPath:null,
   	platforms:[],
-  	logging:false,
-  	compiledFilesPath:"/client"
+  	logging:false
 	}
 }
 
