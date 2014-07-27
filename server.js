@@ -48,19 +48,8 @@ CordovaLoader = {
           _this.addCoreFiles,
           _this.addPluginFiles,
           _this.packFiles
-/*           _this.serve */
         ]);
 			}
-/*
-      } else if (CordovaLoader.settings.mode == "production") {
-        Logger.log('cordova', 'cordova-loader started in production CordovaLoader.settings.mode.');
-
-         async.series([
-          _this.loadPackedFiles,
-          _this.serve,
-        ]);
-      }
-*/
     }
   },
 
@@ -79,43 +68,6 @@ CordovaLoader = {
     });
 
     Logger.log('cordova', 'Watching Cordova project plugin directory for changes..');
-  },
-
-  /*
-    Serve the compiled files on /cordova.js
-  */
-  serve: function () {
-    WebApp.connectHandlers.use(function(req, res, next) {
-      var platform, response;
-
-      if (req.url.split('/')[1] !== "cordova.js" || req.method !== "GET") {
-        next();
-        return;
-      }
-
-      if (/iPhone|iPad|iPod/i.test(req.headers["user-agent"])) {
-        platform = "ios";
-      } else if (/Android/i.test(req.headers["user-agent"])){
-        platform = "android";
-      } else if (/BlackBerry/i.test(req.headers["user-agent"])){
-        platform = "blackberry";
-      } else if (/IEMobile/i.test(req.headers["user-agent"])){
-        platform = "windows";
-      }
-
-      if (_.indexOf(CordovaLoader.settings.platforms, platform) == -1) {
-        response = "// Browser not supported";
-      } else {
-        response = compiledFiles[platform];
-        Logger.log('cordova', 'Serving the cordova.js file to platform', platform);
-      }
-
-      res.statusCode = 200;
-      res.setHeader("Content-Length", Buffer.byteLength(response, "utf8"));
-      res.setHeader("Content-Type", "text/javascript");
-      res.write(response);
-      res.end();
-    });
   },
 
   /*
@@ -225,26 +177,6 @@ CordovaLoader = {
 
   },
 
-  /*
-    Load the previous version of the packed cordova files
-  */
-  loadPackedFiles: function (callback) {
-    CordovaLoader.settings.platforms.forEach(function (platform) {
-      var pack = [],
-            concatFile = '';
-
-      fs.readFile(appPath + CordovaLoader.settings.compiledFilesPath + '/cordova/' + platform + '.js', 'utf8', function (err, data) {
-        if (err)
-          Logger.log('error', 'error while reading file '+pluginJsFilePath);
-        else {
-          Logger.log('cordova', 'Loaded compiled file into memory', platform);
-          compiledFiles[platform] = data;
-        }
-      });      
-    });
-
-    callback(null, 'done');
-  },
   settings:{
   	cordovaProjectPath:null,
   	platforms:[],
