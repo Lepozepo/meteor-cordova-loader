@@ -28,6 +28,10 @@ mrt add cordova-loader
 
 ================
 
+##### What does this do?
+It compiles all the files your meteor application needs to be compatible with cordova and it's plugins. You absolutely must run it in development before deploying to see changes reflected in production.
+
+
 ##### GETTING STARTED (iOS)
 #### Step 1: Create a Cordova project in your meteor project (so where you run mrt you run this)
 ````
