@@ -1,5 +1,8 @@
 Package.describe({
-    summary: 'Cordova asset compiler and loader'
+    summary: 'Cordova asset compiler and loader',
+    name:"lepozepo:cordova_loader",
+    version:"1.0.0",
+    git:"https://github.com/Lepozepo/meteor-cordova-loader"
 });
 
 Npm.depends({
@@ -12,8 +15,8 @@ Npm.depends({
 
 Package.on_use(function (api) {
     api.use([
-      'log',
-      'webapp'
+      'log@1.0.0',
+      'webapp@1.0.0'
     ], 'server');
 
     api.add_files('server.js', 'server');
