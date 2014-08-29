@@ -15,7 +15,7 @@ Npm.depends({
 
 Package.on_use(function (api) {
     api.use([
-      'log@1.0.0',
+      'mrt:log@0.0.2',
       'webapp@1.0.0'
     ], 'server');
 
