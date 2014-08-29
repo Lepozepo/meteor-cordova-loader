@@ -1,6 +1,6 @@
 Package.describe({
     summary: 'Cordova asset compiler and loader',
-    name:"lepozepo:cordova_loader",
+    name:"lepozepo:cordova-loader",
     version:"1.0.0",
     git:"https://github.com/Lepozepo/meteor-cordova-loader"
 });
